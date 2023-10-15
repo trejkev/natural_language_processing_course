@@ -59,7 +59,7 @@ usrFileName       = "yelp_academic_dataset_user.json"
 # --                              User manual                               -- #
 ################################################################################
 if len(sys.argv) == 2 and sys.argv[1].lower() in ['man', 'manual']:
-    print('This script intends to pre-process the data that will be needed by' )
+    print("This script intends to pre-process the data that will be needed by" )
     print("the AI-ML classifier that will be used to predict data about the"   )
     print("users based on their reviews.\n"                                    )
     print("To use this script, two parameters must be sent:"                   )
