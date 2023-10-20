@@ -79,7 +79,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 ################################################################################
 # --                          Train the classifier                          -- #
 ################################################################################
-classifier = SVC(kernel='poly', degree=3)
+classifier = SVC(kernel = 'poly', degree = 3)
 classifier.fit(X_train, y_train)
 
 
