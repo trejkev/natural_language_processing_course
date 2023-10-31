@@ -1,4 +1,4 @@
-# Review Impact Classsifier
+# Review Impact Classifier
 
 The present project is focused on the natural language processing section of identifying authorship, with the difference that in this case, we are looking for identification of the impact of the review, regardless of the author, to see if the most impactful reviewers in the website follow a common pattern or not.
 
