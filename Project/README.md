@@ -36,7 +36,7 @@ ___
     ]
 ___
 
-I have taken a total of 10361 reviews for training purposes, and 2591 for testing purposes, and with this very short sample, I was able to create a classifier using a _Support Vector Machine_, and after some characterization trials to detect that using _Radial Basis Function_, with C equals to 10 and gamma equals to 0.1, can guarantee an accuracy of about 72%, which means, there is a pattern that all the impactful reviewers follow when adding a review, and the classifier is being capable to detect it 72% of the times.
+I have taken a total of 10361 reviews for training purposes, and 2591 for testing purposes, and with this very short sample, I was able to create a classifier using a _Support Vector Classifier_, and after some characterization trials to detect that using _Radial Basis Function_, with C equals to 10 and gamma equals to 0.1, can guarantee an accuracy of about 72%, which means, there is a pattern that all the impactful reviewers follow when adding a review, and the classifier is being capable to detect it 72% of the times.
 
 RESULTS:
 ----
