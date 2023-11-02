@@ -36,9 +36,26 @@ ___
     ]
 ___
 
+Classifier Tuning
+----
+For the classifier tuning, multiple parameters were considered with the combination of all of them when applicable, these are the following.
+
+Parameters applicable to all kernels:
+* __kernel__: The kernel function was varied between Linear, Polynomial, RBF, and Sigmoid, since these determine the way the data is split.
+* __C__: The regularization parameter C is also one of the most critical parameters to tune, since it controls the trade-off between maximizing the margin and minimizing classification error. It was varied from very short numbers to considerably large numbers, to be more precise this is a simple representation of the tested values: [0.1 to 1, step of 0.1] + [1 to 100, step of 10] + [100 to 1000, step of 100]
+
+Special parameters:
+* __gamma__: This parameter is applicable for RBF, Polynomial, and Sigmoid kernels, it controls the shape of the decision boundary. It was varied from very short numbers to considerably large numbers, to be more precise this is a simple representation of the tested values: [0.1 to 1, step of 0.1] + [1 to 100, step of 10] + [100 to 1000, step of 100]
+* __decision_function_shape__: This parameter applies only to the Linear kernel, specifically it determines how the decision function is calculated for multi-class classification problems. It was varied between 'ovr' and 'ovo'.
+* __degree__: This parameter applies only to the Polynomial kernel, it determines the degree of the polynomial equation splitting the data. It was varied from 2 to 9, in steps of 1.
+
+Notes:
+* OVR (one versus the rest) means that scikit-learn will train multiple binary classifiers, and then, each binary classifier is trained to distinguish one class from all the others.
+* OVO (one versus one) means that scikit-learn will train binary classifiers for every pair of classes, and then, each binary classifier will be trained to distinguish between two specific classes.
+  
 I have taken a total of 10361 reviews for training purposes, and 2591 for testing purposes, and with this very short sample, I was able to create a classifier using a _Support Vector Classifier_, and after some characterization trials to detect that using _Radial Basis Function_, with C equals to 10 and gamma equals to 0.1, can guarantee an accuracy of about 72%, which means, there is a pattern that all the impactful reviewers follow when adding a review, and the classifier is being capable to detect it 72% of the times.
 
-RESULTS:
+Results
 ----
     Accuracy  [(TP+TN)/ALL]: 0.7186414511771517
     Precision [TP/(TP+FP)] : 0.7239070500196928
