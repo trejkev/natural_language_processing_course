@@ -53,20 +53,19 @@ Notes:
 * OVR (one versus the rest) means that scikit-learn will train multiple binary classifiers, and then, each binary classifier is trained to distinguish one class from all the others.
 * OVO (one versus one) means that scikit-learn will train binary classifiers for every pair of classes, and then, each binary classifier will be trained to distinguish between two specific classes.
   
-I have taken a total of 10361 reviews for training purposes, and 2591 for testing purposes, and with this very short sample, I was able to create a classifier using a _Support Vector Classifier_, and after some characterization trials to detect that using _Radial Basis Function_, with C equals to 10 and gamma equals to 0.1, can guarantee an accuracy of about 72%, which means, there is a pattern that all the impactful reviewers follow when adding a review, and the classifier is being capable to detect it 72% of the times.
+I have taken a total of 10361 reviews for training purposes, and 2591 for testing purposes, and with this very short sample, I was able to create a classifier using a _Support Vector Classifier_, and after some characterization trials to detect that using _Radial Basis Function_, with C equals to 10 and gamma equals to 0.1, can guarantee an accuracy of about 64%, which means, there seems to be a pattern that all the impactful reviewers follow when adding a review, and the classifier is being capable to detect it correctly 64% of the times.
 
 Results
 ----
-    Accuracy  [(TP+TN)/ALL]: 0.7186414511771517
-    Precision [TP/(TP+FP)] : 0.7239070500196928
-    Recall    [TP/(TP+FN)] : 0.984994640943194
-    F1        [2*P*R/(P+R)]: 0.8345062429057889
+    Accuracy  [(TP+TN)/ALL]: 0.6379776148205326
+    Precision [TP/(TP+FP)] : 0.6033519553072626
+    Recall    [TP/(TP+FN)] : 0.700162074554295
+    F1        [2*P*R/(P+R)]: 0.6481620405101276
 
 See the confusion matrix below for reference.
 
-
 <p align="center">
-  <img src="https://github.com/trejkev/natural_language_processing_course/assets/18760154/ae69241d-f22a-42a1-afa9-a1fdcf3923bf" width="800" />
+  <img src="https://github.com/trejkev/natural_language_processing_course/assets/18760154/55208705-c8db-4112-8ca8-fa0864e55d6c" width="600" />
 </p>
 
 ## How to Use the Code
