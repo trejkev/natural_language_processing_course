@@ -105,7 +105,7 @@ fn         = confMatrix[1][0]
 ################################################################################
 # --                            Show the results                            -- #
 ################################################################################
-print("RESULTS:"                                     )
+print( "RESULTS:"                                    )
 print( "----"                                        )
 print(f"    Total train samples: {len(y_train)}"     )
 print(f"    Total test samples:  {len(y_test)}"      )
