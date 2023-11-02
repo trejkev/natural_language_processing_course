@@ -57,7 +57,7 @@ for line in dataset:
     corpusData.append(line["text"])
     revCount = line["user_data"]["review_count"]
     useful   = line["user_data"]["useful"]
-    labelsData.append(1 if useful / ( revCount + 1) >= 0.5 else 0)
+    labelsData.append(1 if useful / ( revCount + 1) >= 0.9 else 0)
 
 
 ################################################################################
@@ -118,8 +118,8 @@ print( "----"                                        )
 print(f"    Confusion matrix:"                       )
 print(f"        Correctly selected (TP):       {tp}" )
 print(f"        Incorrectly selected (FP):     {fp}" )
-print(f"        Correctly not selected (FN):   {fn}" )
-print(f"        Incorrectly not selected (TN): {tn}" )
+print(f"        Correctly not selected (TN):   {tn}" )
+print(f"        Incorrectly not selected (FN): {fn}" )
 
 
 ################################################################################
