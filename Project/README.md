@@ -8,7 +8,7 @@ Since the data from the author impact and their reviews is split into two differ
 
 The tailored dataset looks this way:
 
-___
+
     dataset = [
         {
             'text'     : "This is the text of the first review",
@@ -34,7 +34,6 @@ ___
             }
         }
     ]
-___
 
 # Support Vector Machine Classifier with Bigrams Data Model
 
@@ -43,13 +42,42 @@ ___
 For the classifier tuning, multiple parameters were considered with the combination of all of them when applicable, these are the following.
 
 ### Parameters applicable to all kernels:
-* __kernel__: The kernel function was varied between Linear, Polynomial, RBF, and Sigmoid, since these determine the way the data is split.
-* __C__: The regularization parameter C is also one of the most critical parameters to tune, since it controls the trade-off between maximizing the margin and minimizing classification error. It was varied from very short numbers to considerably large numbers, to be more precise this is a simple representation of the tested values: [0.1 to 1, step of 0.1] + [1 to 100, step of 10] + [100 to 1000, step of 100]
+* __kernel__:
+  
+        Description: The kernel determines the way the data is split.
+        Range: {Linear, Polynomial, RBF, Sigmoid}
+* __C__:
+
+        Description: The regularization parameter C is also one of
+                     the most critical parameters to tune, since it
+                     controls the trade-off between maximizing the
+                     margin and minimizing classification error.
+        Range:       { x | 0.1 ≤ x ≤ 1   , ∃ k ∈ ℤ (x = 0.1k) } ∪
+                     { x | 1   ≤ x ≤ 100 , ∃ k ∈ ℤ (x = 10k ) } ∪
+                     { x | 100 ≤ x ≤ 1000, ∃ k ∈ ℤ (x = 100k) }
 
 ### Special parameters:
-* __gamma__: This parameter is applicable for RBF, Polynomial, and Sigmoid kernels, it controls the shape of the decision boundary. It was varied from very short numbers to considerably large numbers, to be more precise this is a simple representation of the tested values: [0.1 to 1, step of 0.1] + [1 to 100, step of 10] + [100 to 1000, step of 100]
-* __decision_function_shape__: This parameter applies only to the Linear kernel, specifically it determines how the decision function is calculated for multi-class classification problems. It was varied between 'ovr' and 'ovo'.
-* __degree__: This parameter applies only to the Polynomial kernel, it determines the degree of the polynomial equation splitting the data. It was varied from 2 to 9, in steps of 1.
+* __gamma__:
+
+        Description: This parameter is applicable for RBF,
+                     Polynomial, and Sigmoid kernels, it controls
+                     the shape of the decision boundary.
+        Range:       { x | 0.1 ≤ x ≤ 1   , ∃ k ∈ ℤ (x = 0.1k) } ∪
+                     { x | 1   ≤ x ≤ 100 , ∃ k ∈ ℤ (x = 10k ) } ∪
+                     { x | 100 ≤ x ≤ 1000, ∃ k ∈ ℤ (x = 100k) }
+* __decision_function_shape__:
+
+        Description: This parameter applies only to the Linear kernel,
+                     specifically, it determines how the decision
+                     function is calculated for multi-class
+                     classification problems.
+        Range:       {'ovr', 'ovo'}
+* __degree__:
+
+        Description: This parameter applies only to the Polynomial
+                     kernel, it determines the degree of the polynomial
+                     equation splitting the data.
+        Range:       { x | x ∈ ℤ, 2 ≤ x ≤ 9 }
 
 ### Notes:
 * OVR (one versus the rest) means that scikit-learn will train multiple binary classifiers, and then, each binary classifier is trained to distinguish one class from all the others.
