@@ -36,25 +36,27 @@ ___
     ]
 ___
 
-Classifier Tuning
-----
+# Support Vector Machine Classifier with Bigrams Data Model
+
+## Classifier Tuning
+
 For the classifier tuning, multiple parameters were considered with the combination of all of them when applicable, these are the following.
 
-Parameters applicable to all kernels:
+### Parameters applicable to all kernels:
 * __kernel__: The kernel function was varied between Linear, Polynomial, RBF, and Sigmoid, since these determine the way the data is split.
 * __C__: The regularization parameter C is also one of the most critical parameters to tune, since it controls the trade-off between maximizing the margin and minimizing classification error. It was varied from very short numbers to considerably large numbers, to be more precise this is a simple representation of the tested values: [0.1 to 1, step of 0.1] + [1 to 100, step of 10] + [100 to 1000, step of 100]
 
-Special parameters:
+### Special parameters:
 * __gamma__: This parameter is applicable for RBF, Polynomial, and Sigmoid kernels, it controls the shape of the decision boundary. It was varied from very short numbers to considerably large numbers, to be more precise this is a simple representation of the tested values: [0.1 to 1, step of 0.1] + [1 to 100, step of 10] + [100 to 1000, step of 100]
 * __decision_function_shape__: This parameter applies only to the Linear kernel, specifically it determines how the decision function is calculated for multi-class classification problems. It was varied between 'ovr' and 'ovo'.
 * __degree__: This parameter applies only to the Polynomial kernel, it determines the degree of the polynomial equation splitting the data. It was varied from 2 to 9, in steps of 1.
 
-Notes:
+### Notes:
 * OVR (one versus the rest) means that scikit-learn will train multiple binary classifiers, and then, each binary classifier is trained to distinguish one class from all the others.
 * OVO (one versus one) means that scikit-learn will train binary classifiers for every pair of classes, and then, each binary classifier will be trained to distinguish between two specific classes.
 
-Results
--
+## Results
+
 I have taken a total of 10361 reviews for training purposes, and 2591 for testing purposes, and with this very short sample, I was able to create a classifier using a _Support Vector Classifier_, and after some characterization trials to detect that using _Radial Basis Function_, with C equals to 10 and gamma equals to 0.1, can guarantee an accuracy of about 64%, which means, there seems to be a pattern that all the impactful reviewers follow when adding a review, and the classifier is being capable to detect it correctly 64% of the times.
 
     Accuracy  [(TP+TN)/ALL]: 0.6379776148205326
@@ -68,9 +70,25 @@ See the confusion matrix below for reference.
   <img src="https://github.com/trejkev/natural_language_processing_course/assets/18760154/55208705-c8db-4112-8ca8-fa0864e55d6c" width="600" />
 </p>
 
-## How to Use the Code
+# Sequential Neural Network with Word Embeddings Data Model
 
-### Using the input_data_processor.py file
+To test a second approach to represent the data, and to classify the data, a neural network with word vectors approach was used.
+
+## Classifier Tuning
+
+TBD
+
+### Parameters considered
+
+TBD
+
+## Results
+
+TBD
+
+# How to Use the Code
+
+## Using the input_data_processor.py file
 
 To use the code, at first, you will have to create the dataset, or use the already provided by the repository. In case you want to create it you will have to use the _input_data_processor.py_, which receives two different parameters, the first is the action to perform, and the second is the number of reviews to consider, or the starting point to continue generating the reviews data, based on the relevant_data.py file, see the following guidance for more information.
 
@@ -104,7 +122,7 @@ To use the code, at first, you will have to create the dataset, or use the alrea
                the relevant_data.py line number - 1. Available only when
                using generateRelDataWithUsr.
 
-### Using the review_classifier.py file
+## Using the review_classifier.py file
 
 Once you have your dataset, you need to rename it to _relevant_dataset.py_ and place it into _input_ directory, and finally run the command _python3 review_classifier.py_ to get the classification results.
 
