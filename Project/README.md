@@ -52,8 +52,8 @@ For the classifier tuning, multiple parameters were considered with the combinat
                      the most critical parameters to tune, since it
                      controls the trade-off between maximizing the
                      margin and minimizing classification error.
-        Range:       { x | 0.1 ≤ x ≤ 1   , ∃ k ∈ ℤ (x = 0.1k) } ∪
-                     { x | 1   ≤ x ≤ 100 , ∃ k ∈ ℤ (x = 10k ) } ∪
+        Range:       { x | 0.1 ≤ x < 1   , ∃ k ∈ ℤ (x = 0.1k) } ∪
+                     { x | 1   ≤ x < 100 , ∃ k ∈ ℤ (x = 10k ) } ∪
                      { x | 100 ≤ x ≤ 1000, ∃ k ∈ ℤ (x = 100k) }
 
 ### Special parameters:
@@ -62,8 +62,8 @@ For the classifier tuning, multiple parameters were considered with the combinat
         Description: This parameter is applicable for RBF,
                      Polynomial, and Sigmoid kernels, it controls
                      the shape of the decision boundary.
-        Range:       { x | 0.1 ≤ x ≤ 1   , ∃ k ∈ ℤ (x = 0.1k) } ∪
-                     { x | 1   ≤ x ≤ 100 , ∃ k ∈ ℤ (x = 10k ) } ∪
+        Range:       { x | 0.1 ≤ x < 1   , ∃ k ∈ ℤ (x = 0.1k) } ∪
+                     { x | 1   ≤ x < 100 , ∃ k ∈ ℤ (x = 10k ) } ∪
                      { x | 100 ≤ x ≤ 1000, ∃ k ∈ ℤ (x = 100k) }
 * __decision_function_shape__:
 
