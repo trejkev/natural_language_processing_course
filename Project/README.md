@@ -41,7 +41,7 @@ The tailored dataset looks this way:
 
 For the classifier tuning, multiple parameters were considered with the combination of all of them when applicable, these are the following.
 
-### Parameters applicable to all kernels:
+### Parameters Applicable to All Kernels:
 * __kernel__:
   
         Description: The kernel determines the way the data is split.
@@ -56,7 +56,7 @@ For the classifier tuning, multiple parameters were considered with the combinat
                      { x | 1   ≤ x < 100 , ∃ k ∈ ℤ (x = 10k ) } ∪
                      { x | 100 ≤ x ≤ 1000, ∃ k ∈ ℤ (x = 100k) }
 
-### Special parameters:
+### Special Parameters:
 * __gamma__:
 
         Description: This parameter is applicable for RBF,
@@ -104,11 +104,65 @@ To test a second approach to represent the data, and to classify the data, a neu
 
 ## Classifier Tuning
 
-TBD
+For the enhancement of the accuracy, both the sequential neural network and the word vectors were tuned together. There were multiple parameters considered along the way, these are mentioned below.
 
-### Parameters considered
+### Word Vector (Word Embeddings) Parameters Considered
 
-TBD
+* __vector_size__:
+
+        Description: When using word embeddings, every set word is
+                     converted into a vector. Therefore, the vector
+                     size refers to the number of dimensions in the
+                     numerical vector used to represent a word.
+         Range:       {50, 100, 200}
+* __window_size__:
+
+        Description: It refers to the number of surrounding words or
+                     context words considered when training the
+                     embeddings for a specific target word. It
+                     determines how much contextual information is
+                     taken into account when creating word vectors.
+         Range:      {5, 10, 15, 20}
+* __sg__:
+
+        Description: Skip-gram is an algorithm used in Word2Vec to
+                     predict the surrounding words based on a given
+                     target word. On the opposite, a continuous bag
+                     of words (CBOW) algorithm guesses the target word
+                     based on the surrounding words.
+         Range:      {0,1} -> 1 = Skip-Gram, 0 = CBOW
+
+### Sequential Neural Network Parameters Considered
+
+* __Number of hidden layers__:
+
+        Description: Number of hidden layers of the neural network.
+        Range:       {1, 2, 3, 4, 5, 6}
+* __Number of neurons per hidden layer__:
+
+        Description: Number of neurons that each hidden layer will have.
+        Range:       {64, 128, 256}
+* __Activation function__:
+
+        Description: Activation function for each of the neurons.
+        Range:       {relu, tanh, sigmoid}
+* __batch_size__:
+
+        Description: It controls how many data samples are used to
+                     calculate the gradient and update the model's
+                     parameters in each training iteration.
+        Range:       {32, 64, 128}
+* __optimizer__:
+
+        Description: The optimizer determines how the model's weights
+                     and biases are updated during training to minimize
+                     the specified loss function.
+        Range:       {adam, sgd, rmsprop}
+* __epochs__:
+
+        Description: The epochs parameter determines the number of
+                     iterations that will occur to train the model.
+        Range:       {10, 50, 100, 200, 300, 600}
 
 ## Results
 
@@ -116,7 +170,7 @@ TBD
 
 # How to Use the Code
 
-## Using the input_data_processor.py file
+## Using the input_data_processor.py File
 
 To use the code, at first, you will have to create the dataset, or use the already provided by the repository. In case you want to create it you will have to use the _input_data_processor.py_, which receives two different parameters, the first is the action to perform, and the second is the number of reviews to consider, or the starting point to continue generating the reviews data, based on the relevant_data.py file, see the following guidance for more information.
 
