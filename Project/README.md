@@ -85,17 +85,17 @@ For the classifier tuning, multiple parameters were considered with the combinat
 
 ## Results
 
-I have taken a total of 10361 reviews for training purposes, and 2591 for testing purposes, and with this very short sample, I was able to create a classifier using a _Support Vector Classifier_, and after some characterization trials to detect that using _Radial Basis Function_, with C equals to 10 and gamma equals to 0.1, can guarantee an accuracy of about 64%, which means, there seems to be a pattern that all the impactful reviewers follow when adding a review, and the classifier is being capable to detect it correctly 64% of the times.
+There were taken a total of 22475, where 17980 reviews for training purposes, and 4495 for testing purposes, and with this very short sample, it was possible to create a classifier using a _Support Vector Classifier_, and after some characterization trials to detect that using _Radial Basis Function_, with C equals to 10 and gamma equals to 0.1, can guarantee an accuracy of about 60.8%, which means, there seems to be a pattern that all the impactful reviewers follow when adding a review, and the classifier is being capable to detect it correctly 60.8% of the times.
 
-    Accuracy  [(TP+TN)/ALL]: 0.6379776148205326
-    Precision [TP/(TP+FP)] : 0.6033519553072626
-    Recall    [TP/(TP+FN)] : 0.700162074554295
-    F1        [2*P*R/(P+R)]: 0.6481620405101276
+    Accuracy  [(TP+TN)/ALL]: 0.6075639599555062
+    Precision [TP/(TP+FP)] : 0.558104550582926
+    Recall    [TP/(TP+FN)] : 0.7158707187650748
+    F1        [2*P*R/(P+R)]: 0.6272189349112426
 
 See the confusion matrix below for reference.
 
 <p align="center">
-  <img src="https://github.com/trejkev/natural_language_processing_course/assets/18760154/55208705-c8db-4112-8ca8-fa0864e55d6c" width="600" />
+  <img src="https://github.com/trejkev/natural_language_processing_course/assets/18760154/9c359d76-36e1-4cc9-9594-28d1739f7cc9" width="600" />
 </p>
 
 # Sequential Neural Network with Word Embeddings Data Model
@@ -166,7 +166,18 @@ For the enhancement of the accuracy, both the sequential neural network and the 
 
 ## Results
 
-TBD
+There were taken a total of 22475, where 17980 reviews for training purposes, and 4495 for testing purposes, and with this very short sample, it was possible to create a classifier using a _Sequential Neural Network_, by the hand of the use of word vectors (aka _Word Embeddings_), and after some characterization trials to detect that using 4 hidden layers of 128 neurons each, and with relu activation function for the neural network architecture, sgd optimizer, a batch size of 32, and 100 epochs for the compilation-training stages, and a vector size of 200, with a window size of 5, and skip-gram enabled for the word vectors, can guarantee an accuracy of about 65%, which means, there seems to be a pattern that all the impactful reviewers follow when adding a review, and the classifier is being capable to detect it correctly 65% of the times.
+
+    Accuracy  [(TP+TN)/ALL]: 0.6509454846382141
+    Precision [TP/(TP+FP)] : 0.6392265193370166
+    Recall    [TP/(TP+FN)] : 0.5581283164495899
+    F1        [2*P*R/(P+R)]: 0.595930981200103
+
+See the confusion matrix below for reference.
+
+<p align="center">
+  <img src="https://github.com/trejkev/natural_language_processing_course/assets/18760154/a5a6c875-7848-4cde-98d8-9542f106a2ac" width="600" />
+</p>
 
 # How to Use the Code
 
