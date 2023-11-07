@@ -133,8 +133,11 @@ elif approach == 'word2vec':
     tokenizedParagraphs = [word_tokenize(review) for review in corpusData]
 
     # -- Train Word2Vec model on the tokenized data
-    dataModel = Word2Vec(
-        tokenizedParagraphs, vector_size = 100, window = 5, min_count = 1, sg = 0
+    dataModel = Word2Vec(tokenizedParagraphs,
+        vector_size = 200,
+        window      = 5,
+        min_count   = 1,
+        sg          = 1
     )
 
     # -- Save the trained data model for future use
@@ -156,15 +159,17 @@ elif approach == 'word2vec':
     y_train = tf.convert_to_tensor(y_train, dtype = tf.float32)
     y_test  = tf.convert_to_tensor(y_test , dtype = tf.float32)
     
-    # -- Build a simple feedforward neural network
+    # -- Build a simple sequential neural network
     classifier = Sequential()
     classifier.add(Flatten(input_shape = (X_train.shape[1],)))                  # Input layer sized to the input vector size
-    classifier.add(Dense(256, activation = 'relu'))                             # 300 hidden layers, relu helps to detect complex patterns
+    # -- Add 5 hidden layers of 256 neurons each with relu activation function
+    for layer in range(4):
+        classifier.add(Dense(128, activation = 'relu'))
     classifier.add(Dense(1  , activation = 'sigmoid'))                          # Output layer, single unit, as the classification is binary, sigmoid is used for binary classification
 
     # -- Compile the classifier with appropriate settings
     classifier.compile(
-        optimizer = 'adam',
+        optimizer = 'sgd',
         loss      = 'binary_crossentropy',
         metrics   = ['accuracy']
     )
@@ -172,7 +177,7 @@ elif approach == 'word2vec':
     # -- Train the classifier
     classifier.fit(X_train, y_train,
         epochs          = 100,
-        batch_size      = 20,
+        batch_size      = 32,
         validation_data = (X_test, y_test)
     )
 
