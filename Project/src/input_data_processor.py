@@ -33,17 +33,8 @@ SOFTWARE.
 import json       # To deal with reviews dataset preprocessing
 import os         # To get the current working directory
 import sys        # To get input parameters
-import nltk       # To generate bigrams
 import ssl        # To install nltk dependencies
 import subprocess # To generate the output dataset
-
-try:
-    _create_unverified_https_context = ssl._create_unverified_context
-except AttributeError:
-    pass
-else:
-    ssl._create_default_https_context = _create_unverified_https_context
-nltk.download('punkt')
 
 
 ################################################################################
@@ -53,42 +44,6 @@ relevantInputData = []
 inputDirectory    = os.getcwd().replace('src','input')
 revFileName       = "yelp_academic_dataset_review.json"
 usrFileName       = "yelp_academic_dataset_user.json"
-
-
-################################################################################
-# --                              User manual                               -- #
-################################################################################
-if len(sys.argv) == 2 and sys.argv[1].lower() in ['man', 'manual']:
-    print("This script intends to pre-process the data that will be needed by" )
-    print("the AI-ML classifier that will be used to predict data about the"   )
-    print("users based on their reviews.\n"                                    )
-    print("To use this script, two parameters must be sent:"                   )
-    print("    - [1] Action to perform:"                                       )
-    print("        - formatRevToListDict:     Formats the review json file to" )
-    print("                                   be a list of dictionaries. It"   )
-    print("                                   will generate a _mod.json file"  )
-    print("                                   that you must rename after"      )
-    print("                                   verifying its correctness."      )
-    print("        - formatUsrListToDict:     Formats the user json file to be")
-    print("                                   a list of dictionaries. It"      )
-    print("                                   will generate a _mod.json file"  )
-    print("                                   that you must rename after"      )
-    print("                                   verifying its correctness."      )
-    print("        - generateRevRelevantData: Generates a rev_relevant_data.py")
-    print("                                   file containing the review"      )
-    print("                                   relevant data."                  )
-    print("        - generateRelDataWithUsr:  Once generateRevRelevantData has")
-    print("                                   been done, creates a"            )
-    print("                                   relevant_data.py file containing")
-    print("                                   a list of dictionaries including")
-    print("                                   user data."                      )
-    print("    - [2] Number of reviews to consider, 'all' considers all the"   )
-    print("          reviews. Available only when using"                       )
-    print("          generateRevRelevantData."                                 )
-    print("    - [2] Add user data starting from this line number, based on"   )
-    print("          the relevant_data.py line number - 1. Available only when")
-    print("          using generateRelDataWithUsr."                            )
-    exit(1)
 
 
 ################################################################################
@@ -140,7 +95,6 @@ if actionToPerform in ["formatRevToListDict", "formatUsrListToDict"]:
         del output_file
     else:
         print("File already formated")
-
     exit(1)
 
 
@@ -158,16 +112,6 @@ if actionToPerform == "generateRevRelevantData":
     # -- Collect relevant data from the review dataset
     iteration = 0
     for data in reviewDataset:
-        # -- Generate bigrams without None values 
-        # tokens = nltk.word_tokenize(data["text"].lower())
-        # bigrams = list(
-        #     nltk.ngrams(tokens, 2,
-        #         pad_left         = True,
-        #         pad_right        = True,
-        #         left_pad_symbol  = None,
-        #         right_pad_symbol = None
-        #     )
-        # )[1:-1]
         relDataFile.write(
             str(
                 {
@@ -237,3 +181,4 @@ if actionToPerform == "generateRelDataWithUsr":
     outputFile = open(f"{inputDirectory}/relevant_data.py", 'a')
     outputFile.write("]\n")
     outputFile.close()
+    exit(1)
