@@ -36,7 +36,7 @@ The tailored dataset looks this way:
     ]
 
 
-Generating this tailored dataset was a huge challenge, since importing them to any Python script using an 8 GB RAM computer was not possible without absorbing the whole RAM, and needing even more memory. Therefore, a script using system calls to pick what we needed was the approach to take, with the tradeoff of having a really slow data collection process.
+Generating this tailored dataset was a huge challenge, since importing them to any Python script using an 8 GB RAM computer was not possible without absorbing the whole RAM, and needing even more memory. Therefore, a script using system calls to pick what we needed was the approach to take, with the tradeoff of having a comparable slow data collection and generation process.
 
 # Support Vector Machine Classifier with Bigrams Data Model
 
