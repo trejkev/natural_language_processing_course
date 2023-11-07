@@ -116,7 +116,6 @@ if actionToPerform == "generateRevRelevantData":
             str(
                 {
                     "text"     : data["text"].lower(),
-                    # "bigrams"  : bigrams,
                     "review_id": data["review_id"],
                     "user_id"  : data["user_id"]
                 }
