@@ -44,7 +44,7 @@ The tailored dataset looks this way:
     ]
 
 
-Generating this tailored dataset was a huge challenge, since importing them to any Python script using an 8 GB RAM computer was not possible without absorbing the whole RAM, and needing even more memory. Therefore, a script using system calls to pick what we needed was the approach to take, with the tradeoff of having a comparable slow data collection and generation process.
+Generating this tailored dataset was a huge challenge, since importing the review and user datasets to any Python script using an 8 GB RAM computer was not possible without absorbing the whole RAM, and needing even more memory (review.json weights 5.35 GB, while user.json weights 3.37 GB). Therefore, a script using grep and sed CLI commands was needed to overcome this issue, with the problem that internally they use system calls, generating a comparable slower process than having the datasets included in the script, but the way to go if you have a computer with a lack of resources to deal with the size of these datasets.
 
 # Support Vector Machine Classifier with Bigrams Data Model
 
