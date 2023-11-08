@@ -40,6 +40,9 @@ from sklearn.metrics                 import recall_score
 from sklearn.metrics                 import f1_score
 from sklearn.metrics                 import confusion_matrix
 
+# -- Libraries to include inputs directory
+import sys, os
+
 # -- Libraries to use word embeddings
 from   keras.models  import Sequential
 from   keras.layers  import Flatten
@@ -51,56 +54,71 @@ import tensorflow    as     tf
 import nltk
 import ssl
 
+# -- Library for hyperparameters optimization
+from hyperopt                 import tpe, fmin
+
+# -- Libraries for plotting the confusion matrix
+import matplotlib.pyplot as plt
+import seaborn           as sns
+
+# -- Import the input files
+sys.path.append(f"{os.getcwd().replace('src','input')}")
+from relevant_dataset import dataset
+from optimization_search_space import svc_search_space  , nn_search_space
+from optimization_search_space import svc_default_params, nn_default_params
+
+# -- Enable nltk tokenization
 try:
     _create_unverified_https_context = ssl._create_unverified_context
 except AttributeError:
     pass
 else:
     ssl._create_default_https_context = _create_unverified_https_context
-nltk.download('punkt', quiet = True, raise_on_error = True)                     # Necessary for nltk tokenization
+nltk.download('punkt', quiet = True, raise_on_error = True)  
 
-# -- Libraries for plotting the confusion matrix
-import matplotlib.pyplot as plt
-import seaborn           as sns
 
-# -- Method to convert the pharagraphs to vectors
+################################################################################
+# --                     Convert paragraphs to vectors                      -- #
+################################################################################
 def paragraph_to_vector(paragraph, model):
     vector = [model.wv[word] for word in paragraph if word in model.wv]
     return np.mean(vector, axis=0) if vector else np.zeros(model.vector_size)
 
 
 ################################################################################
-# --                           Import the dataset                           -- #
-################################################################################
-import sys, os
-sys.path.append(f"{os.getcwd().replace('src','input')}")
-from relevant_dataset import dataset
-
-
-################################################################################
 # --          Pre-process the dataset to get the corpus and labels          -- #
 ################################################################################
-corpusData = []
-labelsData = []
-for line in dataset:
-    revCount = line["user_data"]["review_count"]
-    useful   = line["user_data"]["useful"]
-    labelsData.append(1 if useful / ( revCount + 1) >= 0.9 else 0)
-    corpusData.append(line["text"])
+def generate_corpus_and_labels(dataset):
+    corpusData = []
+    labelsData = []
+    for line in dataset:
+        revCount = line["user_data"]["review_count"]
+        useful   = line["user_data"]["useful"]
+        labelsData.append(1 if useful / ( revCount + 1) >= 0.9 else 0)
+        corpusData.append(line["text"])
+    return corpusData, labelsData
 
 
 ################################################################################
-# --                  Utilize a Support Vector Classifier                   -- #
+# --              Utilize Bigrams with Support Vector Machine               -- #
 ################################################################################
-approach = 'SVC'
-if len(sys.argv) == 2 and sys.argv[1].lower() == 'word2vec':
-    print("Will use word embeddings with self-training")
-    approach = 'word2vec'
-else:
-    print("Defaulted to SVC")
+def svm_approach(corpusData, labelsData, params):
 
+    # -- Set the parameters to configure the classifier
+    kernel                  = params["kernel"]
+    C                       = params["C"]
+    gamma                   = params["gamma"]
+    decision_function_shape = params["decision_function_shape"]
+    degree                  = params["degree"]
+    if 'opt' in approach:
+        file = open("svc_optimization.log", "a")
+        file.write(f"kernel: {kernel} - ")
+        file.write(f"C: {C} - ")
+        file.write(f"gamma: {gamma} - ")
+        file.write(f"decision_function_shape: {decision_function_shape} - ")
+        file.write(f"degree: {degree}\n")
+        file.close()
 
-if approach == 'SVC':
     # -- Create the bigram features
     vectorizer   = CountVectorizer(ngram_range=(2, 2))
     sparseMatrix = vectorizer.fit_transform(corpusData)
@@ -111,7 +129,13 @@ if approach == 'SVC':
     )
 
     # -- Train the classifier
-    classifier = SVC(kernel = 'rbf', C = 10, gamma = 0.1)
+    classifier = SVC(
+        kernel                  = kernel,
+        C                       = C,
+        gamma                   = gamma,
+        decision_function_shape = decision_function_shape,
+        degree                  = degree
+    )
     classifier.fit(X_train, y_train)
 
     # -- Make predictions
@@ -123,21 +147,58 @@ if approach == 'SVC':
     recall     = recall_score(y_test, y_pred)
     f1         = f1_score(y_test, y_pred)
     confMatrix = confusion_matrix(y_test, y_pred)
+    
+    # -- Return the results
+    metrics               = {}
+    metrics["accuracy"]   = accuracy
+    metrics["precision"]  = precision
+    metrics["recall"]     = recall
+    metrics["f1"]         = f1
+    metrics["confMatrix"] = confMatrix
+    if 'opt' in approach:
+        file = open("svc_optimization.log", "a")
+        file.write(f"    {metrics}\n\n")
+        file.close()
+    return metrics
 
 
 ################################################################################
 # --             Utilize Word Embeddings with a Neural Network              -- #
 ################################################################################
-elif approach == 'word2vec':
+def word2vec_approach(corpusData, labelsData, params):
+
+    # -- Set the parameters to configure the classifier and data model
+    vector_size         = params["vector_size"]
+    window_size         = params["window_size"]
+    sg                  = params["sg"]
+    hidden_layers       = params["hidden_layers"]
+    neurons             = params["neurons"]
+    activation_function = params["activation_function"]
+    batch_size          = params["batch_size"]
+    optimizer           = params["optimizer"]
+    epochs              = params["epochs"]
+    if 'opt' in approach:
+        file = open("word2vec_optimization.log", "a")
+        file.write(f"vector_size: {vector_size} - ")
+        file.write(f"window_size: {window_size} - ")
+        file.write(f"sg: {sg} - ")
+        file.write(f"hidden_layers: {hidden_layers} - ")
+        file.write(f"neurons: {neurons} - ")
+        file.write(f"activation_function: {activation_function} - ")
+        file.write(f"batch_size: {batch_size} - ")
+        file.write(f"optimizer: {optimizer} - ")
+        file.write(f"epochs: {epochs}\n"   )
+        file.close()
+
     # -- Tokenize the paragraphs
     tokenizedParagraphs = [word_tokenize(review) for review in corpusData]
 
     # -- Train Word2Vec model on the tokenized data
     dataModel = Word2Vec(tokenizedParagraphs,
-        vector_size = 200,
-        window      = 5,
+        vector_size = vector_size,
+        window      = window_size,
         min_count   = 1,
-        sg          = 1
+        sg          = sg
     )
 
     # -- Save the trained data model for future use
@@ -162,22 +223,22 @@ elif approach == 'word2vec':
     # -- Build a simple sequential neural network
     classifier = Sequential()
     classifier.add(Flatten(input_shape = (X_train.shape[1],)))                  # Input layer sized to the input vector size
-    # -- Add 5 hidden layers of 256 neurons each with relu activation function
-    for layer in range(4):
-        classifier.add(Dense(128, activation = 'relu'))
+    # -- Add hidden layers
+    for layer in range(hidden_layers):
+        classifier.add(Dense(neurons, activation = activation_function))
     classifier.add(Dense(1  , activation = 'sigmoid'))                          # Output layer, single unit, as the classification is binary, sigmoid is used for binary classification
 
     # -- Compile the classifier with appropriate settings
     classifier.compile(
-        optimizer = 'sgd',
+        optimizer = optimizer,
         loss      = 'binary_crossentropy',
         metrics   = ['accuracy']
     )
 
     # -- Train the classifier
     classifier.fit(X_train, y_train,
-        epochs          = 100,
-        batch_size      = 32,
+        epochs          = epochs,
+        batch_size      = batch_size,
         validation_data = (X_test, y_test)
     )
 
@@ -188,65 +249,134 @@ elif approach == 'word2vec':
     recall         = recall_score(y_test, y_pred > 0.5)
     f1             = f1_score(y_test, y_pred > 0.5)
     confMatrix     = confusion_matrix(y_test, y_pred > 0.5)
-
-
-################################################################################
-# --                           Evaluate the model                           -- #
-################################################################################
-tn = confMatrix[0][0]
-fp = confMatrix[0][1]
-tp = confMatrix[1][1]
-fn = confMatrix[1][0]
+    
+    # -- Return the results
+    metrics               = {}
+    metrics["accuracy"]   = accuracy
+    metrics["precision"]  = precision
+    metrics["recall"]     = recall
+    metrics["f1"]         = f1
+    metrics["confMatrix"] = confMatrix
+    if 'opt' in approach:
+        file = open("word2vec_optimization.log", "a")
+        file.write(f"    {metrics}\n\n")
+        file.close()
+    return metrics
 
 
 ################################################################################
 # --                            Show the results                            -- #
 ################################################################################
-print( "RESULTS:"                                    )
-print( "----"                                        )
-print(f"    Total train samples: {len(y_train)}"     )
-print(f"    Total test samples:  {len(y_test)}"      )
-print( "----"                                        )
-print(f"    Accuracy  [(TP+TN)/ALL]: {accuracy}"     )
-print(f"    Precision [TP/(TP+FP)] : {precision}"    )
-print(f"    Recall    [TP/(TP+FN)] : {recall}"       )
-print(f"    F1        [2*P*R/(P+R)]: {f1}"           )
-print( "----"                                        )
-print(f"    Confusion matrix:"                       )
-print(f"        Correctly selected (TP):       {tp}" )
-print(f"        Incorrectly selected (FP):     {fp}" )
-print(f"        Correctly not selected (TN):   {tn}" )
-print(f"        Incorrectly not selected (FN): {fn}" )
+def report_results(metrics):
+    tn = metrics["confMatrix"][0][0]
+    fp = metrics["confMatrix"][0][1]
+    tp = metrics["confMatrix"][1][1]
+    fn = metrics["confMatrix"][1][0]
 
+    print( "RESULTS:"                                            )
+    print( "----"                                                )
+    print(f"    Accuracy  [(TP+TN)/ALL]: {metrics['accuracy']}"  )
+    print(f"    Precision [TP/(TP+FP)] : {metrics['precision']}" )
+    print(f"    Recall    [TP/(TP+FN)] : {metrics['recall']}"    )
+    print(f"    F1        [2*P*R/(P+R)]: {metrics['f1']}"        )
+    print( "----"                                                )
+    print(f"    Confusion matrix:"                               )
+    print(f"        Correctly selected (TP):       {tp}"         )
+    print(f"        Incorrectly selected (FP):     {fp}"         )
+    print(f"        Correctly not selected (TN):   {tn}"         )
+    print(f"        Incorrectly not selected (FN): {fn}"         )
+
+
+    # -- Plot the confusion matrix
+    plt.figure(figsize=(8, 6))
+    sns.heatmap(
+        data        = [[tp,fp],[fn,tn]],
+        annot       = True,
+        fmt         = 'd',
+        cmap        = 'Blues', 
+        xticklabels = [
+            'Reviewer is impactful',
+            'Reviewer is not impactful'
+        ],
+        yticklabels = [
+            'Reviewer is impactful',
+            'Reviewer is not impactful'
+        ]
+    )
+
+    # -- Assign the plot labels
+    plt.xlabel('Actual')
+    plt.ylabel('Predicted')
+    plt.title('Confusion Matrix Heatmap')
+
+    # -- Move the X-axis to the top
+    ax = plt.gca()
+    ax.xaxis.set_ticks_position('top')
+    ax.xaxis.set_label_position('top')
+
+    # -- Show the plot
+    plt.show()
+
+def target_function(args):
+    results = {}
+    if "SVC" in approach:
+        results = svm_approach(corpus, labels, params = args)
+    elif "word2vec" in approach:
+        results = word2vec_approach(corpus, labels, params = args)
+    return 1/(results["accuracy"] + 1)
 
 ################################################################################
-# --                        Plot the confusion matrix                       -- #
+# --                            Main of the code                            -- #
 ################################################################################
-plt.figure(figsize=(8, 6))
-sns.heatmap(
-    data        = [[tp,fp],[fn,tn]],
-    annot       = True,
-    fmt         = 'd',
-    cmap        = 'Blues', 
-    xticklabels = [
-        'Reviewer is impactful',
-        'Reviewer is not impactful'
-    ],
-    yticklabels = [
-        'Reviewer is impactful',
-        'Reviewer is not impactful'
-    ]
-)
+if __name__ == "__main__":
+    # -- Select the data model and classification method
+    approach = 'SVC'
+    if len(sys.argv) >= 2:
+        if sys.argv[1].lower() == 'word2vec':
+            print("Will use word embeddings with self-training")
+            approach = 'word2vec'
+        else:
+            print("Defaulted to SVC")
+    if len(sys.argv) >= 3:
+        if "opt" in sys.argv[2].lower():
+            approach += "_optimize"
+    optTrials = 1000
+    if len(sys.argv) >= 4:
+        optTrials = int(sys.argv[3])
 
-# -- Assign the plot labels
-plt.xlabel('Actual')
-plt.ylabel('Predicted')
-plt.title('Confusion Matrix Heatmap')
+    corpus, labels = generate_corpus_and_labels(dataset)
 
-# -- Move the X-axis to the top
-ax = plt.gca()
-ax.xaxis.set_ticks_position('top')
-ax.xaxis.set_label_position('top')
-
-# -- Show the plot
-plt.show()
+    if 'SVC' in approach:
+        if 'opt' in approach:
+            best = fmin(
+                target_function,
+                svc_search_space,
+                algo = tpe.suggest,
+                max_evals = optTrials
+            )
+            file = open("svc_optimization.log", "a")
+            file.write(f"Best params for SVC after {optTrials} iterations\n")
+            file.write(f"{best}\n\n")
+            file.close()
+        else:
+            metrics = svm_approach(corpus, labels, params = svc_default_params)
+            report_results(metrics)
+    elif 'word2vec' in approach:
+        if 'opt' in approach:
+            best = fmin(
+                target_function,
+                nn_search_space,
+                algo = tpe.suggest,
+                max_evals = optTrials
+            )
+            file = open("word2vec_optimization.log", "a")
+            file.write(
+                f"Best params for word2vec after {optTrials} iterations\n"
+            )
+            file.write(f"{best}\n\n")
+            file.close()
+        else:
+            metrics = word2vec_approach(
+                corpus, labels, params = nn_default_params
+            )
+            report_results(metrics)
