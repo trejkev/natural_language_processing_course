@@ -1,5 +1,13 @@
 # Review Impact Classifier
 
+## (Short) Introduction
+
+In the branch of NLP there are multiple investigations on topics like sentiment analysis, LLM, and pattern recognition, as part of the last one mentioned comes into play the authorship identification, which is a branch that searches for patterns in the text that each author follows along the way. This is a deeply investigated branch into NLP, however, there is another sub-topic around authorship identification, which may be taken by responding _Is there any way to detect patterns that a group of people having something in common follow?_.
+
+There are multiple things groups of people may have in common, that can lead to similar speeches, like education level, place where they live, country of birth, and many others. Reason why an investigation question came up related to pattern recognition in speech, it aims to determine if it is possible to detect a pattern that people with insightful reviews have in common, based on a portion of Yelp dataset. However, this can be extended to many other areas, like detecting the level of education about a topic, based only on people's answers to certain questions related to that topic, these are specific areas of pattern recognition in NLP that may be interesting to explore.
+
+## About the Project
+
 The present project is focused on the natural language processing section of identifying authorship, with the difference that in this case, we are looking for identification of the impact of the review, regardless of the author, to see if the most impactful reviewers in the website follow a common pattern or not. This is an important approach, that may allow to identify potentially useless reviews, or even fake reviews, depending on the approach it is used for.
 
 For the exercise I am using Yelp Dataset (see https://www.yelp.com/dataset/), which provides a high volume of reviews with their authors, and some relevant data about each of the authors, businesses, reviews, and so.
@@ -36,7 +44,7 @@ The tailored dataset looks this way:
     ]
 
 
-Generating this tailored dataset was a huge challenge, since importing them to any Python script using an 8 GB RAM computer was not possible without absorbing the whole RAM, and needing even more memory. Therefore, a script using system calls to pick what we needed was the approach to take, with the tradeoff of having a comparable slow data collection and generation process.
+Generating this tailored dataset was a huge challenge, since importing the review and user datasets to any Python script using an 8 GB RAM computer was not possible without absorbing the whole RAM, and needing even more memory (review.json weights 5.35 GB, while user.json weights 3.37 GB). Therefore, a script using grep and sed CLI commands was needed to overcome this issue, with the problem that internally they use system calls, generating a comparable slower process than having the datasets included in the script, but the way to go if you have a computer with a lack of resources to deal with the size of these datasets.
 
 # Support Vector Machine Classifier with Bigrams Data Model
 
