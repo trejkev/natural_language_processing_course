@@ -129,13 +129,16 @@ def svm_approach(corpusData, labelsData, params):
     )
 
     # -- Train the classifier
-    classifier = SVC(
-        kernel                  = kernel,
-        C                       = C,
-        gamma                   = gamma,
-        decision_function_shape = decision_function_shape,
-        degree                  = degree
-    )
+    if kernel == 'linear':
+        classifier = SVC(
+            kernel                  = kernel,
+            C                       = C,
+            decision_function_shape = decision_function_shape
+        )
+    elif kernel == 'poly':
+        classifier = SVC(kernel = kernel, C = C, gamma = gamma, degree = degree)
+    elif kernel in ['rbf', 'sigmoid']:
+        classifier = SVC(kernel = kernel, C = C, gamma = gamma)
     classifier.fit(X_train, y_train)
 
     # -- Make predictions
