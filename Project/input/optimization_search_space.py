@@ -5,8 +5,8 @@ svc_search_space = {
     "kernel"                 : hp.choice(
         "kernel", ['linear', 'poly', 'rbf', 'sigmoid']
     ),
-    "C"                      : hp.uniform("C", 0.1, 1000),
-    "gamma"                  : hp.uniform("gamma", 0.1, 1000),
+    "C"                      : hp.uniform("C", 0.1, 100),
+    "gamma"                  : hp.uniform("gamma", 0.1, 100),
     "decision_function_shape": hp.choice(
         "decision_function_shape", ['ovo', 'ovr']
     ),
