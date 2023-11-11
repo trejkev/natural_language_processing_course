@@ -110,7 +110,7 @@ See the confusion matrix below for reference.
   <img src="https://github.com/trejkev/natural_language_processing_course/assets/18760154/9c359d76-36e1-4cc9-9594-28d1739f7cc9" width="600" />
 </p>
 
-# Sequential Neural Network with Word Embeddings Data Model
+# Sequential Neural Network Classifier with Word Embeddings Data Model
 
 To test a second approach to represent the data, and to classify the data, a neural network with word vectors approach was used.
 
