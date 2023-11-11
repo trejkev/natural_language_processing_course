@@ -1,4 +1,5 @@
-# Review Impact Classifier
+# Evaluation and Comparison of the Accuracy of Two Classification Approaches on the Usefulness of User Reviews
+
 
 ## (Short) Introduction
 
