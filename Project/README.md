@@ -229,5 +229,17 @@ To use the code, at first, you will have to create the dataset, or use the alrea
 
 ## Using the review_classifier.py file
 
-Once you have your dataset, you need to rename it to _relevant_dataset.py_ and place it into _input_ directory, and finally run the command _python3 review_classifier.py_ to get the classification results.
+Once you have your dataset, you need to rename it to _relevant_dataset.py_ and place it into _input_ directory, with this, you are ready to use the script. There are three different things you may consider, first, the classifier you want to use, second, if you want to plot the confusion matrix, and third, if you want to run a simple iteration, or if you want to run an optimization iteration.
+
+The command is quite simple, just use {svc or nn}{_printCM}{\_opt\_{# of trials}}, consider that none of the parameters are mandatory, there is a default scenario, running a simple run with word embeddings and without plotting the confusion matrix. If you desire to run a different scenario, see below the control inputs you are allowed to use.
+1. {svc or nn}: This directive serves as a classification approach selector, it lets you choose between a Support Vector Machine (with bigrams data model) or a Neural Network (with word vectors data model).
+2. {_printCM}: Plotting the confusion matrix is a blocking task, which means that while the plot is open, the program is frozen, this option is disabled by default, therefore, if you want to enable it, you will need to add it to the input param string.
+3. {\_opt\_{# of trials}}: When you want to run an optimization instead of a simple run, you will have to add 'opt' to the input param, followed by the number of iterations you want. Since you need to run the script multiple times, it is recommended to disable the use of plotting the confusion matrix, otherwise the program will freeze for every iteration.
+
+In the end, some examples of usage may be the ones shown below.
+
+        python3 review_classifier.py             # Will run the default scenario
+        python3 review_classifier.py svc         # Will run a simple iteration with a SVM
+        python3 review_classifier.py nn_printCM  # Will run a simple iteration with a NN and printing the confusion matrix
+        python3 review_classifier.py svc_opt_500 # Will run an optimization routine for 500 iterations using a SVM
 
