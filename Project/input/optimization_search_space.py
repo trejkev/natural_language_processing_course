@@ -1,12 +1,18 @@
 from hyperopt import hp
 
+cList = []
+for number in range(1, 1000):
+    cList.append(number / 10)
+gammaList = cList[:]
+gammaList.append("scale")
+
 # -- Search space for Support Vector Machine classifier
 svc_search_space = {
     "kernel"                 : hp.choice(
         "kernel", ['linear', 'poly', 'rbf', 'sigmoid']
     ),
-    "C"                      : hp.uniform("C", 0.1, 100),
-    "gamma"                  : hp.uniform("gamma", 0.1, 100),
+    "C"                      : hp.choice("C", cList),
+    "gamma"                  : hp.choice("gamma", gammaList),
     "decision_function_shape": hp.choice(
         "decision_function_shape", ['ovo', 'ovr']
     ),
@@ -32,7 +38,7 @@ nn_search_space = {
 svc_default_params = {
     "kernel"                 : 'rbf',
     "C"                      : 10,
-    "gamma"                  : 0.2,
+    "gamma"                  : 0.1,
     "decision_function_shape": 'ovo',
     "degree"                 : 2
 }
