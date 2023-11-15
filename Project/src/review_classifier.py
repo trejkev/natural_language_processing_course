@@ -30,6 +30,10 @@ SOFTWARE.
 # --                          Necessary libraries                           -- #
 ################################################################################
 
+# -- Libraries to record the date and time
+from datetime import datetime
+import pytz
+
 # -- Libraries to use SVC
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection         import train_test_split
@@ -42,6 +46,10 @@ from sklearn.metrics                 import confusion_matrix
 
 # -- Libraries to include inputs directory
 import sys, os
+
+# -- directories
+outWD = os.getcwd().replace('src','output')
+inWD  = os.getcwd().replace('src','input')
 
 # -- Libraries to use word embeddings
 from   keras.models  import Sequential
@@ -62,7 +70,7 @@ import matplotlib.pyplot as plt
 import seaborn           as sns
 
 # -- Import the input files
-sys.path.append(f"{os.getcwd().replace('src','input')}")
+sys.path.append(f"{inWD}")
 from relevant_dataset import dataset
 from optimization_search_space import svc_search_space  , nn_search_space
 from optimization_search_space import svc_default_params, nn_default_params
@@ -111,7 +119,7 @@ def svm_approach(corpusData, labelsData, params):
     decision_function_shape = params["decision_function_shape"]
     degree                  = params["degree"]
     if 'opt' in approach:
-        file = open("svc_optimization.log", "a")
+        file = open(f"{outWD}/svc_optimization.log", "a")
         file.write(f"kernel: {kernel} - ")
         file.write(f"C: {C} - ")
         file.write(f"gamma: {gamma} - ")
@@ -159,7 +167,7 @@ def svm_approach(corpusData, labelsData, params):
     metrics["f1"]         = f1
     metrics["confMatrix"] = confMatrix
     if 'opt' in approach:
-        file = open("svc_optimization.log", "a")
+        file = open(f"{outWD}/svc_optimization.log", "a")
         file.write(f"    {metrics}\n\n")
         file.close()
     return metrics
@@ -181,7 +189,7 @@ def word2vec_approach(corpusData, labelsData, params):
     optimizer           = params["optimizer"]
     epochs              = params["epochs"]
     if 'opt' in approach:
-        file = open("word2vec_optimization.log", "a")
+        file = open(f"{outWD}/word2vec_optimization.log", "a")
         file.write(f"vector_size: {vector_size} - ")
         file.write(f"window_size: {window_size} - ")
         file.write(f"sg: {sg} - ")
@@ -206,7 +214,7 @@ def word2vec_approach(corpusData, labelsData, params):
 
     # -- Save the trained data model for future use
     dataModel.save(
-        f"{os.getcwd().replace('src','input')}/custom_word2vec.model"
+        f"{inWD}/custom_word2vec.model"
     )
     
     # -- Convert the data model to vector
@@ -261,7 +269,7 @@ def word2vec_approach(corpusData, labelsData, params):
     metrics["f1"]         = f1
     metrics["confMatrix"] = confMatrix
     if 'opt' in approach:
-        file = open("word2vec_optimization.log", "a")
+        file = open(f"{outWD}/word2vec_optimization.log", "a")
         file.write(f"    {metrics}\n\n")
         file.close()
     return metrics
@@ -276,80 +284,96 @@ def report_results(metrics):
     tp = metrics["confMatrix"][1][1]
     fn = metrics["confMatrix"][1][0]
 
-    print( "RESULTS:"                                            )
-    print( "----"                                                )
-    print(f"    Accuracy  [(TP+TN)/ALL]: {metrics['accuracy']}"  )
-    print(f"    Precision [TP/(TP+FP)] : {metrics['precision']}" )
-    print(f"    Recall    [TP/(TP+FN)] : {metrics['recall']}"    )
-    print(f"    F1        [2*P*R/(P+R)]: {metrics['f1']}"        )
-    print( "----"                                                )
-    print(f"    Confusion matrix:"                               )
-    print(f"        Correctly selected (TP):       {tp}"         )
-    print(f"        Incorrectly selected (FP):     {fp}"         )
-    print(f"        Correctly not selected (TN):   {tn}"         )
-    print(f"        Incorrectly not selected (FN): {fn}"         )
+    # -- Get the current date and time for Costa Rica
+    TZ      = pytz.timezone('America/Costa_Rica')
+    utcNow  = datetime.utcnow()
+    sCRTime = utcNow.replace(tzinfo = pytz.utc).astimezone(TZ)
+    sCRTime = sCRTime.strftime('%Y-%m-%d %H:%M:%S %Z')
+    
+    # -- Record the accuracy in a log
+    file = open(
+        f"{outWD}/results_{approach}.log", 'a'
+    )
+    file.write(f"CR time: {sCRTime}\n")
+    file.write( "RESULTS:\n"                                            )
+    file.write( "----\n"                                                )
+    file.write(f"    Accuracy  [(TP+TN)/ALL]: {metrics['accuracy']}\n"  )
+    file.write(f"    Precision [TP/(TP+FP)] : {metrics['precision']}\n" )
+    file.write(f"    Recall    [TP/(TP+FN)] : {metrics['recall']}\n"    )
+    file.write(f"    F1        [2*P*R/(P+R)]: {metrics['f1']}\n"        )
+    file.write( "----\n"                                                )
+    file.write(f"    Confusion matrix:\n"                               )
+    file.write(f"        Correctly selected (TP):       {tp}\n"         )
+    file.write(f"        Incorrectly selected (FP):     {fp}\n"         )
+    file.write(f"        Correctly not selected (TN):   {tn}\n"         )
+    file.write(f"        Incorrectly not selected (FN): {fn}\n"         )
+    file.close()
 
 
     # -- Plot the confusion matrix
-    plt.figure(figsize=(8, 6))
-    sns.heatmap(
-        data        = [[tp,fp],[fn,tn]],
-        annot       = True,
-        fmt         = 'd',
-        cmap        = 'Blues', 
-        xticklabels = [
-            'Reviewer is impactful',
-            'Reviewer is not impactful'
-        ],
-        yticklabels = [
-            'Reviewer is impactful',
-            'Reviewer is not impactful'
-        ]
-    )
+    if printCM:
+        plt.figure(figsize=(8, 6))
+        sns.heatmap(
+            data        = [[tp,fp],[fn,tn]],
+            annot       = True,
+            fmt         = 'd',
+            cmap        = 'Blues', 
+            xticklabels = [
+                'Reviewer is impactful',
+                'Reviewer is not impactful'
+            ],
+            yticklabels = [
+                'Reviewer is impactful',
+                'Reviewer is not impactful'
+            ]
+        )
 
-    # -- Assign the plot labels
-    plt.xlabel('Actual')
-    plt.ylabel('Predicted')
-    plt.title('Confusion Matrix Heatmap')
+        # -- Assign the plot labels
+        plt.xlabel('Actual')
+        plt.ylabel('Predicted')
+        plt.title('Confusion Matrix Heatmap')
 
-    # -- Move the X-axis to the top
-    ax = plt.gca()
-    ax.xaxis.set_ticks_position('top')
-    ax.xaxis.set_label_position('top')
+        # -- Move the X-axis to the top
+        ax = plt.gca()
+        ax.xaxis.set_ticks_position('top')
+        ax.xaxis.set_label_position('top')
 
-    # -- Show the plot
-    plt.show()
+        # -- Show the plot
+        plt.show()
 
+
+################################################################################
+# --                        Target function for SMBO                        -- #
+################################################################################
 def target_function(args):
     results = {}
-    if "SVC" in approach:
+    if "svc" in approach:
         results = svm_approach(corpus, labels, params = args)
     elif "word2vec" in approach:
         results = word2vec_approach(corpus, labels, params = args)
     return 1/(results["accuracy"] + 1)
 
+
 ################################################################################
 # --                            Main of the code                            -- #
 ################################################################################
 if __name__ == "__main__":
-    # -- Select the data model and classification method
-    approach = 'SVC'
+    # -- Select the approach to take
+    approach = 'word2vec'                                                       # Format -> [svc or word2vec]{_printCM}{_opt_{# of trials}}
+    printCM  = False
     if len(sys.argv) >= 2:
-        if sys.argv[1].lower() == 'word2vec':
-            print("Will use word embeddings with self-training")
-            approach = 'word2vec'
-        else:
-            print("Defaulted to SVC")
-    if len(sys.argv) >= 3:
-        if "opt" in sys.argv[2].lower():
-            approach += "_optimize"
-    optTrials = 1000
-    if len(sys.argv) >= 4:
-        optTrials = int(sys.argv[3])
+        approach = sys.argv[1].lower()
+        if 'printcm' in approach:
+            printCM = True
+        if 'opt' in approach:
+            optTrials = int(approach.split('opt_')[1])
+        if 'svc' not in approach and 'word2vec' not in approach:
+            print("Classifier not recognized")
+            exit(1)
 
     corpus, labels = generate_corpus_and_labels(dataset)
 
-    if 'SVC' in approach:
+    if 'svc' in approach:
         if 'opt' in approach:
             best = fmin(
                 target_function,
@@ -357,11 +381,14 @@ if __name__ == "__main__":
                 algo = tpe.suggest,
                 max_evals = optTrials
             )
-            file = open("svc_optimization.log", "a")
+            file = open(f"{outWD}/svc_optimization.log", 'a')
             file.write(f"Best params for SVC after {optTrials} iterations\n")
             file.write(f"{best}\n\n")
             file.close()
         else:
+            file = open(f"{outWD}/results_{approach}.log", 'a')
+            file.write(f"\n\n{svc_default_params}\n")
+            file.close()
             metrics = svm_approach(corpus, labels, params = svc_default_params)
             report_results(metrics)
     elif 'word2vec' in approach:
@@ -372,13 +399,16 @@ if __name__ == "__main__":
                 algo = tpe.suggest,
                 max_evals = optTrials
             )
-            file = open("word2vec_optimization.log", "a")
+            file = open(f"{outWD}/word2vec_optimization.log", 'a')
             file.write(
                 f"Best params for word2vec after {optTrials} iterations\n"
             )
             file.write(f"{best}\n\n")
             file.close()
         else:
+            file = open(f"{outWD}/results_{approach}.log", 'a')
+            file.write(f"\n\n{nn_default_params}\n")
+            file.close()
             metrics = word2vec_approach(
                 corpus, labels, params = nn_default_params
             )
