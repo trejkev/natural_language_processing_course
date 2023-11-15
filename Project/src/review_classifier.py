@@ -176,7 +176,7 @@ def svm_approach(corpusData, labelsData, params):
 ################################################################################
 # --             Utilize Word Embeddings with a Neural Network              -- #
 ################################################################################
-def word2vec_approach(corpusData, labelsData, params):
+def nn_approach(corpusData, labelsData, params):
 
     # -- Set the parameters to configure the classifier and data model
     vector_size         = params["vector_size"]
@@ -189,7 +189,7 @@ def word2vec_approach(corpusData, labelsData, params):
     optimizer           = params["optimizer"]
     epochs              = params["epochs"]
     if 'opt' in approach:
-        file = open(f"{outWD}/word2vec_optimization.log", "a")
+        file = open(f"{outWD}/nn_optimization.log", "a")
         file.write(f"vector_size: {vector_size} - ")
         file.write(f"window_size: {window_size} - ")
         file.write(f"sg: {sg} - ")
@@ -214,7 +214,7 @@ def word2vec_approach(corpusData, labelsData, params):
 
     # -- Save the trained data model for future use
     dataModel.save(
-        f"{inWD}/custom_word2vec.model"
+        f"{outWD}/custom_word2vec.model"
     )
     
     # -- Convert the data model to vector
@@ -269,7 +269,7 @@ def word2vec_approach(corpusData, labelsData, params):
     metrics["f1"]         = f1
     metrics["confMatrix"] = confMatrix
     if 'opt' in approach:
-        file = open(f"{outWD}/word2vec_optimization.log", "a")
+        file = open(f"{outWD}/nn_optimization.log", "a")
         file.write(f"    {metrics}\n\n")
         file.close()
     return metrics
@@ -292,7 +292,7 @@ def report_results(metrics):
     
     # -- Record the accuracy in a log
     file = open(
-        f"{outWD}/results_{approach}.log", 'a'
+        f"{outWD}/results_{approach.split('_')[0]}.log", 'a'
     )
     file.write(f"CR time: {sCRTime}\n")
     file.write( "RESULTS:\n"                                            )
@@ -349,8 +349,8 @@ def target_function(args):
     results = {}
     if "svc" in approach:
         results = svm_approach(corpus, labels, params = args)
-    elif "word2vec" in approach:
-        results = word2vec_approach(corpus, labels, params = args)
+    elif "nn" in approach:
+        results = nn_approach(corpus, labels, params = args)
     return 1/(results["accuracy"] + 1)
 
 
@@ -359,17 +359,18 @@ def target_function(args):
 ################################################################################
 if __name__ == "__main__":
     # -- Select the approach to take
-    approach = 'word2vec'                                                       # Format -> [svc or word2vec]{_printCM}{_opt_{# of trials}}
+    approach = 'nn'                                                       # Format -> [svc or nn]{_printCM}{_opt_{# of trials}}
     printCM  = False
     if len(sys.argv) >= 2:
         approach = sys.argv[1].lower()
         if 'printcm' in approach:
             printCM = True
         if 'opt' in approach:
-            optTrials = int(approach.split('opt_')[1])
-        if 'svc' not in approach and 'word2vec' not in approach:
+            optTrials = int(approach.split('opt_')[1].split('_')[0])
+        if 'svc' not in approach and 'nn' not in approach:
             print("Classifier not recognized")
             exit(1)
+    print(f"Using {approach.split('_')[0]}")
 
     corpus, labels = generate_corpus_and_labels(dataset)
 
@@ -386,12 +387,12 @@ if __name__ == "__main__":
             file.write(f"{best}\n\n")
             file.close()
         else:
-            file = open(f"{outWD}/results_{approach}.log", 'a')
+            file = open(f"{outWD}/results_svc.log", 'a')
             file.write(f"\n\n{svc_default_params}\n")
             file.close()
             metrics = svm_approach(corpus, labels, params = svc_default_params)
             report_results(metrics)
-    elif 'word2vec' in approach:
+    elif 'nn' in approach:
         if 'opt' in approach:
             best = fmin(
                 target_function,
@@ -399,17 +400,17 @@ if __name__ == "__main__":
                 algo = tpe.suggest,
                 max_evals = optTrials
             )
-            file = open(f"{outWD}/word2vec_optimization.log", 'a')
+            file = open(f"{outWD}/nn_optimization.log", 'a')
             file.write(
-                f"Best params for word2vec after {optTrials} iterations\n"
+                f"Best params for nn after {optTrials} iterations\n"
             )
             file.write(f"{best}\n\n")
             file.close()
         else:
-            file = open(f"{outWD}/results_{approach}.log", 'a')
+            file = open(f"{outWD}/results_nn.log", 'a')
             file.write(f"\n\n{nn_default_params}\n")
             file.close()
-            metrics = word2vec_approach(
+            metrics = nn_approach(
                 corpus, labels, params = nn_default_params
             )
             report_results(metrics)
