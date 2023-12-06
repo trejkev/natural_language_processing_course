@@ -30,6 +30,9 @@ SOFTWARE.
 # --                          Necessary libraries                           -- #
 ################################################################################
 
+# -- Library to randomize the dataset split
+import random
+
 # -- Libraries to record the date and time
 from datetime import datetime
 import pytz
@@ -133,7 +136,10 @@ def svm_approach(corpusData, labelsData, params):
 
     # -- Split the data intro training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(
-        sparseMatrix, labelsData, test_size = 0.2, random_state = 42
+        sparseMatrix,
+        labelsData,
+        test_size = 0.2,
+        random_state = random.randint(1, 10000)
     )
 
     # -- Train the classifier
