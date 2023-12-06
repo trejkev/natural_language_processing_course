@@ -33,6 +33,7 @@ from scipy.stats import normaltest, ttest_ind
 import matplotlib.pyplot as plt
 import os, sys
 
+
 ################################################################################
 # --                            Global variables                            -- #
 ################################################################################
