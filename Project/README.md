@@ -1,7 +1,7 @@
 # Evaluation and Comparison of the Accuracy of Two Classification Approaches on the Usefulness of User Reviews
 
 
-## (Short) Introduction
+## Introduction
 
 In the realm of Natural Language Processing (NLP), various studies focus on significant topics such as sentiment analysis, Large Language Models (LLM), and pattern recognition. Within the realm of pattern recognition, a notable subfield is authorship identification. This area involves investigating patterns within text that are distinctive to individual authors.
 
