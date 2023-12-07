@@ -57,16 +57,14 @@ For the classifier tuning, multiple parameters were considered with the combinat
 * __kernel__:
   
         Description: The kernel determines the way the data is split.
-        Range: {Linear, Polynomial, RBF, Sigmoid}
+        Range:       {Linear, Polynomial, RBF, Sigmoid}
 * __C__:
 
         Description: The regularization parameter C is also one of
                      the most critical parameters to tune, since it
                      controls the trade-off between maximizing the
                      margin and minimizing classification error.
-        Range:       { x | 0.1 ≤ x < 1   , ∃ k ∈ ℤ (x = 0.1k) } ∪
-                     { x | 1   ≤ x < 100 , ∃ k ∈ ℤ (x = 10k ) } ∪
-                     { x | 100 ≤ x ≤ 1000, ∃ k ∈ ℤ (x = 100k) }
+        Range:       {10/n | 1 ≤ n < 1000, n ∈ Z}
 
 ### Special Parameters:
 * __gamma__:
@@ -74,9 +72,7 @@ For the classifier tuning, multiple parameters were considered with the combinat
         Description: This parameter is applicable for RBF,
                      Polynomial, and Sigmoid kernels, it controls
                      the shape of the decision boundary.
-        Range:       { x | 0.1 ≤ x < 1   , ∃ k ∈ ℤ (x = 0.1k) } ∪
-                     { x | 1   ≤ x < 100 , ∃ k ∈ ℤ (x = 10k ) } ∪
-                     { x | 100 ≤ x ≤ 1000, ∃ k ∈ ℤ (x = 100k) }
+        Range:       {10/n | 1 ≤ n < 1000, n ∈ Z} U {’scale’}
 * __decision_function_shape__:
 
         Description: This parameter applies only to the Linear kernel,
@@ -134,15 +130,12 @@ For the enhancement of the accuracy, both the sequential neural network and the 
                      embeddings for a specific target word. It
                      determines how much contextual information is
                      taken into account when creating word vectors.
-         Range:      {5, 10, 15, 20}
+         Range:      {5 ≤ n < 21, n ∈ Z}
 * __sg__:
 
-        Description: Skip-gram is an algorithm used in Word2Vec to
-                     predict the surrounding words based on a given
-                     target word. On the opposite, a continuous bag
-                     of words (CBOW) algorithm guesses the target word
-                     based on the surrounding words.
-         Range:      {0,1} -> 1 = Skip-Gram, 0 = CBOW
+        Description: Training algorithm, 1 for skip-gram; otherwise
+                     CBOW.
+         Range:      {0,1}
 
 ### Sequential Neural Network Parameters Considered
 
@@ -163,7 +156,7 @@ For the enhancement of the accuracy, both the sequential neural network and the 
         Description: It controls how many data samples are used to
                      calculate the gradient and update the model's
                      parameters in each training iteration.
-        Range:       {32, 64, 128}
+        Range:       {32 ≤ n < 129, n ∈ Z}
 * __optimizer__:
 
         Description: The optimizer determines how the model's weights
@@ -174,7 +167,7 @@ For the enhancement of the accuracy, both the sequential neural network and the 
 
         Description: The epochs parameter determines the number of
                      iterations that will occur to train the model.
-        Range:       {10, 50, 100, 200, 300, 600}
+        Range:       {10 ≤ n < 200, n ∈ Z}
 
 ## Results
 
