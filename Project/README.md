@@ -3,17 +3,33 @@
 
 ## (Short) Introduction
 
-In the branch of NLP there are multiple investigations on topics like sentiment analysis, LLM, and pattern recognition, as part of the last one mentioned comes into play the authorship identification, which is a branch that searches for patterns in the text that each author follows along the way. This is a deeply investigated branch into NLP, however, there is another sub-topic around authorship identification, which may be taken by responding _Is there any way to detect patterns that a group of people having something in common follow?_.
+In the realm of Natural Language Processing (NLP), various studies focus on significant topics such as sentiment analysis, Large Language Models (LLM), and pattern recognition. Within the realm of pattern recognition, a notable subfield is authorship identification. This area involves investigating patterns within text that are distinctive to individual authors.
 
-There are multiple things groups of people may have in common, that can lead to similar speeches, like education level, place where they live, country of birth, and many others. Reason why an investigation question came up related to pattern recognition in speech, it aims to determine if it is possible to detect a pattern that people with insightful reviews have in common, based on a portion of Yelp dataset. However, this can be extended to many other areas, like detecting the level of education about a topic, based only on people's answers to certain questions related to that topic, these are specific areas of pattern recognition in NLP that may be interesting to explore.
+While authorship identification is a well-explored aspect of NLP, there is an intriguing sub-topic within this field. This sub-topic revolves around discerning patterns shared by a collective group of individuals. The central question guiding this exploration is: _"Is there a method to identify patterns common to a group of people who share certain characteristics?"_.
+
+This line of inquiry extends beyond individual authorship to explore shared linguistic traits or patterns among a defined group. It broadens the scope of traditional authorship identification, opening avenues for understanding language dynamics within specific communities or demographic groups.
+
+In the investigation into pattern recognition within group speech, particularly focusing on usefulness of reviews and datasets like Yelp, the research aims to determine if identifiable patterns exist among individuals consistently providing insightful reviews. This line of inquiry provides valuable insights into shared characteristics within specific groups.
+
+Furthermore, the applicability of this research extends beyond Yelp reviews to various domains. For instance, it could be applied to assess the level of education on a specific topic based solely on individuals' responses to related questions. This expansion highlights the versatility of pattern recognition in NLP, offering valuable insights into educational levels, interests, or expertise within distinct communities.
+
+Exploring these specific areas of pattern recognition enhances the understanding of language dynamics and offers practical applications for tailoring content, services, or educational resources to the specific needs of diverse audiences. This aligns with the broader goal of leveraging NLP for more nuanced and personalized interactions within varied communities.
 
 ## About the Project
 
-The present project is focused on the natural language processing section of identifying authorship, with the difference that in this case, we are looking for identification of the impact of the review, regardless of the author, to see if the most impactful reviewers in the website follow a common pattern or not. This is an important approach, that may allow to identify potentially useless reviews, or even fake reviews, depending on the approach it is used for.
+The current project zeroes in on the natural language processing aspect of authorship identification. However, the unique twist here is that we are not focused on identifying the specific authors; instead, we are aiming to discern patterns that indicate the impact of reviews, regardless of the author. The goal is to determine if the most impactful reviewers on the website share common patterns in their language use.
 
-For the exercise I am using Yelp Dataset (see https://www.yelp.com/dataset/), which provides a high volume of reviews with their authors, and some relevant data about each of the authors, businesses, reviews, and so.
+This approach is crucial as it has the potential to identify reviews that may lack impact or, in extreme cases, might be fake. By examining common patterns among impactful reviewers, we can develop a tool to assess the usefulness and authenticity of reviews on the website. This approach holds significant value in improving the reliability and quality of the information available to users.
 
-Since the data from the author impact and their reviews is split into two different datasets (user.json and review.json), I had to create a tailored dataset, containing the relevant data from the review, which is the review text, review_id, and user_id, and the relevant data from the user, which is yelping_since for longevity, review_count for experience, and useful for impact analysis.
+Using the Yelp Dataset for this exercise is a strategic choice, given its wealth of reviews along with associated author and business data. The dataset, available at https://www.yelp.com/dataset/, provides a substantial volume of reviews, each attributed to specific authors. Additionally, it includes pertinent information about authors, businesses, and reviews, offering a comprehensive foundation for your natural language processing and authorship identification project.
+
+By leveraging this dataset, you can explore patterns in language usage to identify impactful reviewers, transcending the need to pinpoint individual authors. The dataset's richness allows for a nuanced analysis that goes beyond mere author identification, enabling you to assess the broader impact of reviews on the platform. This approach has the potential to uncover valuable insights, ranging from the reliability of reviews to the detection of potentially misleading or fake feedback.
+
+Creating a tailored dataset that combines relevant information from the `review.json` and `user.json` datasets is a thoughtful approach. Combining the necessary data, such as review text, review ID, user ID, yelping_since, review_count, and useful for impact analysis, provides a consolidated dataset that can yield comprehensive insights into reviewer impact.
+
+By considering the longevity of users on Yelp (`yelping_since`), their experience level (`review_count`), and the impact of their reviews (`useful`), you're constructing a dataset that allows for a nuanced analysis. The temporal aspect of Yelping since provides insights into the reviewer's long-term engagement, while the review_count gives an indication of their overall experience. The parameter useful provides a metric for understanding the impact of their reviews.
+
+This tailored dataset appears well-suited to facilitate a detailed examination of patterns related to the impact of reviews, potentially uncovering commonalities among impactful reviewers on Yelp. This can be instrumental in identifying trends and patterns that contribute to the effectiveness of reviews on the platform.
 
 The tailored dataset looks this way:
 
@@ -45,7 +61,11 @@ The tailored dataset looks this way:
     ]
 
 
-Generating this tailored dataset was a huge challenge, since importing the review and user datasets to any Python script using an 8 GB RAM computer was not possible without absorbing the whole RAM, and needing even more memory (review.json weights 5.35 GB, while user.json weights 3.37 GB). Therefore, a script using grep and sed CLI commands was needed to overcome this issue, with the problem that internally they use system calls, generating a comparable slower process than having the datasets included in the script, but the way to go if you have a computer with a lack of resources to deal with the size of these datasets.
+Handling large datasets, especially when memory constraints are present, can indeed be a challenging task. Your approach of using CLI commands like `grep` and `sed` to preprocess and filter the data is a pragmatic solution given the limitations of available memory. Although it might introduce some computational overhead due to system calls, it's a practical workaround to efficiently manage and process large datasets without overwhelming the system's memory.
+
+Optimizing resource usage becomes crucial when dealing with datasets of this magnitude, and your use of command-line tools showcases adaptability in addressing these challenges. The balance between available resources and the computational efficiency required for dataset manipulation is a common consideration in data science and analysis.
+
+This approach allows you to work with the data without having to load the entire dataset into memory, making it feasible to perform the necessary preprocessing and filtering steps for your tailored dataset. It's a pragmatic solution that demonstrates resourceful problem-solving in the face of hardware constraints.
 
 # Support Vector Machine Classifier with Bigrams Data Model
 
@@ -93,7 +113,11 @@ For the classifier tuning, multiple parameters were considered with the combinat
 
 ## Results
 
-There were taken a total of 22475, where 17980 reviews for training purposes, and 4495 for testing purposes, and with this very short sample, it was possible to create a classifier using a _Support Vector Classifier_, and after some characterization trials to detect that using _Radial Basis Function_, with C equals to 10 and gamma equals to 0.1, can guarantee an accuracy of about 60.8%, which means, there seems to be a pattern that all the impactful reviewers follow when adding a review, and the classifier is being capable to detect it correctly 60.8% of the times.
+Creating a classifier with a Support Vector Classifier (SVC) based on a sample of 22,475 reviews is an impressive feat, especially given the constraints you faced with large datasets. The division into 17,980 training reviews and 4,495 testing reviews allows for a robust evaluation of the model's performance.
+
+The use of a Radial Basis Function (RBF) kernel with specific parameters (C=10, gamma=0.1) showcases the effectiveness of the classifier. Achieving an accuracy of approximately 60.8% suggests that there is a discernible pattern among impactful reviewers when adding a review, and the classifier is successfully identifying this pattern more than half of the time.
+
+It's worth noting that a 60.8% accuracy rate is meaningful, especially considering the complexity and variability in language use. The classifier's ability to capture patterns in impactful reviews is promising, and further optimizations or feature engineering could potentially enhance its performance.
 
     Accuracy  [(TP+TN)/ALL]: 0.6075639599555062
     Precision [TP/(TP+FP)] : 0.558104550582926
@@ -171,7 +195,13 @@ For the enhancement of the accuracy, both the sequential neural network and the 
 
 ## Results
 
-There were taken a total of 22475, where 17980 reviews for training purposes, and 4495 for testing purposes, and with this very short sample, it was possible to create a classifier using a _Sequential Neural Network_, by the hand of the use of word vectors (aka _Word Embeddings_), and after some characterization trials to detect that using 4 hidden layers of 128 neurons each, and with relu activation function for the neural network architecture, sgd optimizer, a batch size of 32, and 100 epochs for the compilation-training stages, and a vector size of 200, with a window size of 5, and skip-gram enabled for the word vectors, can guarantee an accuracy of about 65%, which means, there seems to be a pattern that all the impactful reviewers follow when adding a review, and the classifier is being capable to detect it correctly 65% of the times.
+Creating a classifier using a Sequential Neural Network (SNN) with word vectors (Word Embeddings) is a sophisticated approach that leverages the power of deep learning for your analysis. Working with a total of 22,475 reviews and dividing them into 17,980 for training and 4,495 for testing demonstrates a robust methodology for model evaluation.
+
+The specific architecture of the neural network, with four hidden layers of 128 neurons each, using the relu activation function, showcases a thoughtful design. Additionally, employing the stochastic gradient descent (sgd) optimizer, a batch size of 32, and 100 epochs during the compilation-training stages represents a well-considered set of hyperparameters.
+
+The use of word vectors with a vector size of 200, a window size of 5, and skip-gram enabled for word vectors adds a level of semantic understanding to the model. Achieving an accuracy of around 65% implies that the neural network is effectively capturing patterns in impactful reviews, outperforming the Support Vector Classifier.
+
+This work not only demonstrates the power of neural networks for natural language processing but also suggests that there are discernible patterns among impactful reviewers, and the classifier is successfully identifying them with a commendable accuracy of 65%. Further experimentation or fine-tuning could potentially improve the model's performance.
 
     Accuracy  [(TP+TN)/ALL]: 0.6509454846382141
     Precision [TP/(TP+FP)] : 0.6392265193370166
@@ -183,6 +213,10 @@ See the confusion matrix below for reference.
 <p align="center">
   <img src="https://github.com/trejkev/natural_language_processing_course/assets/18760154/a5a6c875-7848-4cde-98d8-9542f106a2ac" width="600" />
 </p>
+
+### Comparison
+
+
 
 # How to Use the Code
 
@@ -225,6 +259,7 @@ To use the code, at first, you will have to create the dataset, or use the alrea
 Once you have your dataset, you need to rename it to _relevant_dataset.py_ and place it into _input_ directory, with this, you are ready to use the script. There are three different things you may consider, first, the classifier you want to use, second, if you want to plot the confusion matrix, and third, if you want to run a simple iteration, or if you want to run an optimization iteration.
 
 The command is quite simple, just use {svc or nn}{_printCM}{\_opt\_{# of trials}}, consider that none of the parameters are mandatory, there is a default scenario, running a simple run with word embeddings and without plotting the confusion matrix. If you desire to run a different scenario, see below the control inputs you are allowed to use.
+
 1. {svc or nn}: This directive serves as a classification approach selector, it lets you choose between a Support Vector Machine (with bigrams data model) or a Neural Network (with word vectors data model).
 2. {_printCM}: Plotting the confusion matrix is a blocking task, which means that while the plot is open, the program is frozen, this option is disabled by default, therefore, if you want to enable it, you will need to add it to the input param string.
 3. {\_opt\_{# of trials}}: When you want to run an optimization instead of a simple run, you will have to add 'opt' to the input param, followed by the number of iterations you want. Since you need to run the script multiple times, it is recommended to disable the use of plotting the confusion matrix, otherwise the program will freeze for every iteration.
@@ -236,3 +271,6 @@ In the end, some examples of usage may be the ones shown below.
         python3 review_classifier.py nn_printCM  # Will run a simple iteration with a NN and printing the confusion matrix
         python3 review_classifier.py svc_opt_500 # Will run an optimization routine for 500 iterations using a SVM
 
+## Using the statistical_analyzer.py file
+
+Once you have collected the results from each run into _results_NN.log_ and _results_SVC.log_ you will realize that the format obtained is not so useful for inferential analysis, therefore, the use of grep from shell may be the choice to take to get only the lines with the accuracy results, this can be done with the shell command _grep "Accuracy" results_SVC.log > accuracies_SVC.log_, with this, you will create a file named _accuracies_SVC.log_ containing only the accuracy results, and then, you can simply execute the file, adding the number of samples to average, if the data is not behaving normally at first (taking advantage of the central limit theorem), just like _python3 statistical_analyzer.py 7_ to average 7 samples.
