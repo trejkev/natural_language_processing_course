@@ -216,7 +216,15 @@ See the confusion matrix below for reference.
 
 ### Comparison
 
+A total of 237 iterations were conducted for each approach using the newly configured hyperparameters. Subsequently, histograms, as depicted in figure below, were generated. Given the initial non-normal behavior of the data, the Central Limit Theorem was applied to obtain a dataset averaged over 7 samples. From this analysis, it appears that the Word Vector with Sequential Neural Network approach yields a higher accuracy compared to the Bigrams with Support Vector Machine approach. This observation is indicative of the potential performance advantages of the Word Vector methodology in the context of the sequential neural network.
 
+<p align="center">
+  <img src="https://github.com/trejkev/natural_language_processing_course/assets/18760154/e8e5cb87-55c9-4190-b611-942f009267dd" width="600" />
+</p>
+
+Upon a closer examination of the data, it is evident that both datasets exhibit normal behavior. Furthermore, after subjecting both datasets to a normality test, they surpassed the test, providing sufficient evidence to assert their normal distribution tendencies. Specifically, the Support Vector Machine (SVC) approach exhibited a P-Value of 77.25%, while the Neural Network (NN) approach displayed a P-Value of 9.93%. These results validate the normal distribution assumption for both methodologies, contributing to the robustness of the statistical analysis.
+
+After visual inspection of the histograms, the Neural Network (NN) approach appears to yield higher accuracy compared to the Support Vector Machine (SVC) approach. To substantiate this observation statistically, a hypothesis test was conducted with a normality assumption (T-Student) at a 95\% confidence level. The resulting P-Value of 2.42e-238 provides strong evidence to suggest that the mean accuracy of the NN approach is significantly higher than that of the SVC approach with a 95% confidence interval. This statistical support adds robustness to the conclusion drawn from the histograms.
 
 # How to Use the Code
 
